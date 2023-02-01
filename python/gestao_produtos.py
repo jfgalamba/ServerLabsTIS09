@@ -97,3 +97,8 @@ if __name__ == '__main__':
 # var obj = new Xpto();
 # obj.a = 100;
 # System.out.println(obj);    // Xpto: valor de a -> 100
+
+# TPC
+# matricula (str), marca, modelo, data
+# 10-XY-20,Opel,Corsa XL,2019-10-15
+# 20-PQ-15,Mercedes,300SL,2017-05-31
