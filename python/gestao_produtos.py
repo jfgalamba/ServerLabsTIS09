@@ -22,6 +22,8 @@ DEFAULT_INDENTATION = 3
 
 class Produto:
     def __init__(self, id: int, nome: str):
+        if id < 0 or len(str(id)) != 5:
+            raise ValueError(f'{id=} inválido (deve ser > 0 e ter 5 dígitos)')
         self.id = id
         self.nome = nome
     #:
@@ -37,6 +39,12 @@ def main():
 
     print(prod1)
     print(prod2)
+
+    try:
+        Produto(398, "leite mimosa")
+    except ValueError as ex:
+        print("ATENÇÃO: Produto inválido!")
+        print(ex)
 #:
 
 if __name__ == '__main__':
