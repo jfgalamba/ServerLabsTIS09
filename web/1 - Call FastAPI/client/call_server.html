@@ -11,6 +11,7 @@
 
         window.addEventListener('load', function() {
             whenClick('btnHello3', helloGET);
+            // whenClick('btnHello3', helloGET2);
             whenClick('btnHello4', helloPOSTasJSON);
             whenClick('btnHello5', helloPOSTasFormData);
 
@@ -19,6 +20,20 @@
             }
         });
 
+        function helloGET2() {
+            console.log("Using XMLHttpRequest");
+            const name = document.querySelector('#formHello3 input[name="name"]').value;
+            // Utilizamos XMLHttpRequest e não fetch porque este último é
+            // sempre assíncrono (devolve uma Promise) e aqui queremos 
+            // explorar uma tarefa síncrona demorada em JS. XMLHttpRequest 
+            // permite um modo síncrono, modo esse que é desaconselhado em 
+            // código real, mas que aqui é útil para efeitos de demonstração.
+            const fullURL = `${URL}/hello3/${name}`;
+            let request = new XMLHttpRequest();
+            request.open('GET', fullURL, false);  // `false` makes the request synchronous
+            request.send(null);
+            alert(request.responseText);
+        }
 
         async function helloGET() {
             const name = document.querySelector('#formHello3 input[name="name"]').value;
@@ -33,9 +48,12 @@
 
         async function helloPOSTasJSON() {
             const name = document.querySelector('#formHello4 input[name="name"]').value;
+            // const surname = document.querySelector('#formHello4 input[name="surname"]').value;
+            // const age = document.querySelector('#formHello4 input[name="age"]').value;
             const fetchURL = `${URL}/hello4`;
             try {
                 alert(await byPOSTasJSON(fetchURL, {name}));
+                // alert(await byPOSTasJSON(fetchURL, {name, surname, age}));
             }
             catch (error) {
                 console.error("ERROR:", error);
@@ -130,8 +148,8 @@
             <div>
                 <label>Nome</label>
                 <input type="text" name="name">
-                <input type="text" name="surname">
-                <input type="number" name="age">
+                <!-- <input type="text" name="surname"> -->
+                <!-- <input type="number" name="age"> -->
                 <button id="btnHello4" type="button">Hello</button>
             </div>
         </form>
@@ -147,3 +165,4 @@
 
 </body>
 </html>
+

@@ -1,3 +1,5 @@
+import time
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 # from fastapi.staticfiles import StaticFiles
@@ -41,6 +43,7 @@ async def hello2(request: Request):
 
 @app.get('/hello3/{name}')
 async def hello3(name: str):
+    # time.sleep(10)
     return f"Hello: {name}"
 #:
 
@@ -56,6 +59,10 @@ async def hello4(name: NameArgs):
 
 ################################################################################
 
+@app.get('/sum1/{num1}')
+async def sum1(num1: int):
+    pass
+#:
 
 ################################################################################
 
