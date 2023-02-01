@@ -59,9 +59,19 @@ async def hello4(name: NameArgs):
 
 ################################################################################
 
-@app.get('/sum1/{num1}')
-async def sum1(num1: int):
-    pass
+@app.get('/sum1/{num1}/{num2}')
+async def sum1(num1: int, num2: int):
+    return f"Result => {num1 + num2}"
+#:
+
+class SumArgs(BaseModel):
+    num1: int
+    num2: int
+#:
+
+@app.post('/sum2')
+async def sum2(numbers: SumArgs):
+    return f"Result => {numbers.num1 + numbers.num2}"
 #:
 
 ################################################################################

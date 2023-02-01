@@ -7,6 +7,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="call_server.css">
     <script type="module">
+
         const URL = 'http://127.0.0.1:8000';
 
         window.addEventListener('load', function() {
@@ -14,11 +15,37 @@
             // whenClick('btnHello3', helloGET2);
             whenClick('btnHello4', helloPOSTasJSON);
             whenClick('btnHello5', helloPOSTasFormData);
+            whenClick('btnSum1', sumGET);
+            whenClick('btnSum2', sumPOSTasJSON);
 
             function whenClick(id, handler) {
                 document.getElementById(id).addEventListener('click', handler);
             }
         });
+
+        async function sumGET() {
+            const num1 = parseInt(document.querySelector('#formSum1 input[name="num1"]').value, 10);
+            const num2 = parseInt(document.querySelector('#formSum1 input[name="num2"]').value, 10);
+            const fetchURL = `${URL}/sum1/${num1}/${num2}`;
+            try {
+                alert(await byGET(fetchURL));
+            }
+            catch (error) {
+                console.error("ERROR:", error);
+            }
+        }
+
+        async function sumPOSTasJSON() {
+            const num1 = parseInt(document.querySelector('#formSum2 input[name="num1"]').value, 10);
+            const num2 = parseInt(document.querySelector('#formSum2 input[name="num2"]').value, 10);
+            const fetchURL = `${URL}/sum2`;
+            try {
+                alert(await byPOSTasJSON(fetchURL, {num1, num2} ));
+            }
+            catch (erro) {
+                console.error("ERROR:", error);
+            }
+        }
 
         function helloGET2() {
             console.log("Using XMLHttpRequest");
@@ -163,6 +190,27 @@
         </form>
     </section>
 
+    <section>
+        <h1>Soma de dois valores com envio assíncrono através de FETCH</h1>
+        <form id="formSum1">
+            <h2>Sum 1 - GET/URL *Path* Parameters</h2>
+            <div>
+                <label>Numeros</label>
+                <input type="number" name="num1">
+                <input type="number" name="num2">
+                <button id="btnSum1" type="button">Sum</button>
+            </div>
+        </form>
+        <form id="formSum2">
+            <h2>Sum 2 - POST/REQUEST *Body* Parameters (JSON)</h2>
+            <div>
+                <label>Numeros</label>
+                <input type="number" name="num1">
+                <input type="number" name="num2">
+                <button id="btnSum2" type="button">Sum</button>
+            </div>
+        </form>
+    </section>
 </body>
 </html>
 
