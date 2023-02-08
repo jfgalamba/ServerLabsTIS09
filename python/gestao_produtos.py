@@ -1,6 +1,6 @@
 """
 Programa para gestão do catálogo de produtos. Este programa permite:
-    - Listar o catálogo
+    - Lista o catálogo
     - Pesquisar por alguns campos 
     - Eliminar um registo do catálogo
     - Guardar o catálogo em ficheiro
@@ -26,29 +26,33 @@ PRODUCT_TYPES = {
     'FRL': 'Frutas e Legumes'
 }
 
+# id    : > 0 e tem que ter cinco digitos
+# nome
+# tipo
+# quantidade
+# preco
+
 class Produto:
     def __init__(
             self, 
-            id: int, 
+            id_: int, 
             nome: str, 
             tipo: str, 
             quantidade: int,
             preco: dec,
     ):
-        if id < 0 or len(str(id)) != 5:
-            raise ValueError(f'{id=} inválido (deve ser > 0 e ter 5 dígitos)')
+        if id_ < 0 or len(str(id_)) != 5:
+            raise InvalidProdAttribute(f'{id_=} inválido (deve ser > 0 e ter 5 dígitos)')
         if not nome:
-            raise ValueError(f'Nome vazio')
-        # if len(nome) == 0:
-        #     raise ValueError(f'Nome vazio')
-        if quantidade < 0:
-            raise ValueError(f'{quantidade=} inválida (deve ser > 0)')
+            raise InvalidProdAttribute('Nome vazio')
         if tipo not in PRODUCT_TYPES:
-            raise ValueError(f'{tipo=} não reconhecido')
+            raise InvalidProdAttribute(f'Tipo de produto ({tipo}) desconhecido')
+        if quantidade < 0:
+            raise InvalidProdAttribute('Quantidade deve ser >= 0')
         if preco < 0:
-            raise ValueError(f'{preco=} inválido (deve ser > 0)')
+            raise InvalidProdAttribute('Preço deve ser >= 0')
 
-        self.id = id
+        self.id = id_
         self.nome = nome
         self.tipo = tipo
         self.quantidade = quantidade
@@ -56,49 +60,90 @@ class Produto:
     #:
 
     @property
-    def desc_tipo(self):
+    def desc_tipo(self) -> str:
         return PRODUCT_TYPES[self.tipo]
     #:
 
-    def __str__(self):
-        return f"Produto[id: {self.id} nome: {self.nome}]"
+    def __str__(self) -> str:
+        cls_name = self.__class__.__name__
+        return f'{cls_name}[id_= {self.id}  nome = "{self.nome}" tipo = "{self.tipo}"]'
+    #:
+
+    def __repr__(self) -> str:
+        cls_name = self.__class__.__name__
+        return f'{cls_name}(id_={self.id}, nome="{self.nome}", tipo="{self.tipo}", '\
+                f'quantidade={self.quantidade}, preco={repr(self.preco)})'
+    #:
+
+    def com_iva(self, taxa_iva: dec) -> dec:
+        return self.preco * (1 + taxa_iva/100)
     #:
 #:
 
-def main():
-    prod1 = Produto(30987, "pão de milho", 'AL', 2, dec('1'))
-    prod2 = Produto(30098, "leite mimosa", 'AL', 10, dec('2'))
+class InvalidProdAttribute(ValueError):
+    pass
+#:
 
-    print(prod1)
-    print(prod2)
+class CatalogoProdutos:
+    def __init__(self):
+        self._prods = {}
+    #:
 
-    try:
-        Produto(30098, "leite mimosoa", 'AL', 6, dec('-10'))
-    except ValueError as ex:    
-        print("ATENÇÃO: Produto inválido!")
-        print(ex)
+    def append(self, prod: Produto):
+        if prod.id in self._prods:
+            raise DuplicateValue(f'Já existe produto com id {prod.id} no catálogo')
+        self._prods[prod.id] = prod
+    #:
+
+    def _dump(self):
+        for prod in self._prods.values():
+            print(prod)
+        #:
+    #:
+
+    def obtem_por_id(self, id: int) -> Produto | None:
+        return self._prods.get(id)
+    #:
+
+    def pesquisa(self, criterio) -> 'CatalogoProdutos':
+        encontrados = CatalogoProdutos()
+        for prod in self._prods.values():
+            if criterio(prod):
+                encontrados.append(prod)
+        return encontrados
+    #:
+
+    def __str__(self):
+        class_name = self.__class__.__name__
+        return f'{class_name}[#produtos = {len(self._prods)}]'
+    #:
+
+
+    def __iter__(self):
+        for prod in self._prods.values():
+            yield prod
+        #:
+    #:
+
+    def __len__(self):
+        return len(self._prods)
+    #:
+#:
+
+class DuplicateValue(Exception):
+    pass
+#:
+
+def main() -> None:
+    produtos = CatalogoProdutos()
+    produtos.append(Produto(30987, 'pão de milho', 'AL', 2, dec('1')))
+    produtos.append(Produto(30098, 'leite mimosa', 'AL', 10, dec('2')))
+    produtos.append(Produto(21109, 'fairy', 'DL', 20, dec('3')))
+    # produtos.append(Produto(21109, 'fairy', 'DL', 20, dec('3')))
+
+    produtos._dump()
 #:
 
 if __name__ == '__main__':
     main()
 #:
-
-
-
-# class Xpto {
-
-#     public toString() {
-#         return String.format("Xpto: valor de a -> %d", a);
-#     }
-
-#     private int a;
-# }
-
-# var obj = new Xpto();
-# obj.a = 100;
-# System.out.println(obj);    // Xpto: valor de a -> 100
-
-# TPC
-# matricula (str), marca, modelo, data
-# 10-XY-20,Opel,Corsa XL,2019-10-15
-# 20-PQ-15,Mercedes,300SL,2017-05-31
