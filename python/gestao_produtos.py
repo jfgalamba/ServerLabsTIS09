@@ -202,6 +202,11 @@ def exibe_msg(*args, indent = DEFAULT_INDENTATION, **kargs):
     print(' ' * (indent - 1), *args, **kargs)
 #:
 
+def entrada_info(msg: str) -> str:
+    exibe_msg(msg, end='')
+    return input()
+#:
+
 def entrada(msg: str, indent = DEFAULT_INDENTATION) -> str:
     return input(f"{' ' * DEFAULT_INDENTATION}{msg}")
 #:
@@ -233,6 +238,7 @@ def exec_menu():
         exibe_msg("*******************************************")
         exibe_msg("* L - Listar catálogo                     *")
         exibe_msg("* P - Pesquisar por id                    *")
+        exibe_msg("* PN - Pesquisar por nome                 *")
         exibe_msg("* A - Acrescentar produto                 *")
         exibe_msg("* E - Eliminar produto                    *")
         exibe_msg("* G - Guardar catálogo em ficheiro        *")
@@ -247,6 +253,10 @@ def exec_menu():
             exec_listar()
         elif opcao in ('T', 'TERMINAR'):
             exec_terminar()
+        elif opcao in ('P', 'PESQUISAR'):
+            exec_pesquisar_por_id()
+        elif opcao in ('PN',):
+            exec_pesquisar_por_nome()
         else:
             exibe_msg(f"Opção {opcao} inválida!")
             pause()
@@ -266,6 +276,32 @@ def exec_listar():
         exibe_msg(linha)
     #:
     exibe_msg(separador)
+    print()
+    pause()
+#:
+
+def exec_pesquisar_por_id():
+    id_ = int(entrada_info("Indique o ID: "))
+
+    prod = produtos.obtem_por_id(id_) 
+    if prod:
+        exibe_msg("Produto encontrado")
+        exibe_msg(prod)
+    else:
+        exibe_msg("Não foi encontrado nenhum produto com ID {id_}")
+    #:
+    print()
+    pause()
+#:
+
+def exec_pesquisar_por_nome():
+    nome = entrada_info("Nome do produto: ")
+    prods = produtos.pesquisa(lambda prod: nome in prod.nome)
+    if len(prods) != 0:
+        prods._dump()
+    else:
+        exibe_msg(f"Não foram encontrados produtos com a designação {nome}")
+    #:
     print()
     pause()
 #:
