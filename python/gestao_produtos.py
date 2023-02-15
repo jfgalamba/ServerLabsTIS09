@@ -87,6 +87,14 @@ class Produto:
                 f'quantidade={self.quantidade}, preco={repr(self.preco)})'
     #:
 
+    def __lt__(self, prod: 'Produto') -> bool:
+        return self.id < prod.id
+    #:
+
+    def __eq__(self, prod: 'Produto') -> bool:
+        return self.id == prod.id
+    #:
+
     def com_iva(self, taxa_iva: dec) -> dec:
         return self.preco * (1 + taxa_iva/100)
     #:
@@ -147,7 +155,7 @@ class CatalogoProdutos:
             del self._prods[prod.id]
         return a_remover
     #:
-    
+
     def __str__(self):
         class_name = self.__class__.__name__
         return f'{class_name}[#produtos = {len(self._prods)}]'
@@ -252,7 +260,8 @@ def exec_menu():
         if opcao in ('L', 'LISTAR'):
             exec_listar()
         elif opcao in ('T', 'TERMINAR'):
-            exec_terminar()
+            # exec_terminar()
+            break
         elif opcao in ('P', 'PESQUISAR'):
             exec_pesquisar_por_id()
         elif opcao in ('PN',):
