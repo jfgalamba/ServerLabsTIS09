@@ -292,28 +292,76 @@ def exec_listar():
 def exec_pesquisar_por_id():
     id_ = int(entrada_info("Indique o ID: "))
 
-    prod = produtos.obtem_por_id(id_) 
-    if prod:
+    if prod := produtos.obtem_por_id(id_):    # ver nota em baixo
         exibe_msg("Produto encontrado")
         exibe_msg(prod)
     else:
-        exibe_msg("Não foi encontrado nenhum produto com ID {id_}")
+        exibe_msg(f"Não foi encontrado nenhum produto com ID {id_}")
     #:
     print()
     pause()
 #:
 
+# NOTA: O operador ':=' (designado de operador morsa/walrus operator) 
+# foi introduzido com o Python 3.8 e permite atribuir um valor e devolver
+# esse valor. O operador '=' apenas permite atribuir o valor. Ou seja, 
+# o operador ':=' é também uma expressão.
+#
+# Por exemplo, vamos supor que pretendemos atribuir a x o dobro de y 
+# e, simultaneamente, queremos exibir esse valor. Com o operador '='
+# necessitamos sempre de duas instruções (vamos assumir que y == 10):
+#
+#       >>> x = 2 * y
+#       >>> print(f"Valor de X: {x}")
+#       Valor de X: 20
+#       >>> x
+#       20
+#   
+# Com o operador ':=' podemos combinar atribuição e print numa só 
+# instrução:
+#
+#       >>> print(f"Valor de X: {(x := 2*y)}")  
+#       Valor de X: 20
+#       >>> x
+#       20
+#
+# De notar que os parênteses curvos dentro da expressão da f-string são 
+# obrigatórios para que o Python não interprete o que está à direita do
+# ':' como sendo uma especificação de formatação.
+
 def exec_pesquisar_por_nome():
     nome = entrada_info("Nome do produto: ")
     prods = produtos.pesquisa(lambda prod: nome in prod.nome)
-    if len(prods) != 0:
-        prods._dump()
+    if len(prods) != 0:   # ver nota em baixo
+        cls()
+        exibe_msg("Foram encontrados os seguintes produtos:\n".upper())
+        for prod in prods:
+            exibe_msg(prod, indent=DEFAULT_INDENTATION * 2)
     else:
         exibe_msg(f"Não foram encontrados produtos com a designação {nome}")
     #:
     print()
     pause()
 #:
+
+# NOTA: em alternativa também poderíamos ter escrito este if 
+# da seguinte forma:
+#
+#       if prods := produtos.pesquisa(lambda prod: nome in prod.nome):
+#           etc
+#
+# Ou, sem o operador morsa, 
+#
+#       prods = produtos.pesquisa(lambda prod: nome in prod.nome)
+#       if prods:
+#           etc
+#
+# isto é possível porque em Python uma colecção vazia avalia a False.
+# Porém, apesar de eu ter utilizado este idioma durante muitos anos, 
+# hoje prefiro ser mais explícito e utilizar o teste directo com 
+# o len, isto para distinguir dos casos em que uma expressão possa 
+# mesmo ser False ou None. O código fica mais claro e legível com o
+# len.
 
 def exec_terminar():
     sys.exit(0)
