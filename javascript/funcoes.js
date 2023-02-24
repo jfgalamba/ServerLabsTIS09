@@ -588,10 +588,10 @@ const isValidDate = (function() {
     };
 })();
 
-function timedRun(fun, ...args) {
+function timedRun(fun, count = 10_000_000) {
     const start = Date.now();
-    for (let i = 0; i < 10_000_000; i += 1) {
-        fun(...args);
+    for (let i = 0; i < count; i += 1) {
+        fun();
     }
     return (Date.now() - start) / 1000;
 }

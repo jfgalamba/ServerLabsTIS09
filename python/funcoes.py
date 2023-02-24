@@ -474,9 +474,9 @@ def _make_is_valid_date():
 
 is_valid_date = _make_is_valid_date()
 
-def timed_run(fun, *args, **kargs):
+def timed_run(fun, count = 10_000_000):
     start  = time.time()
-    for _ in range(10_000_000):
-        fun(*args, **kargs)
+    for _ in range(count):
+        fun()
     return int(time.time() - start)
 #:
