@@ -15,7 +15,7 @@ import {
 
 
 const URL = 'http://127.0.0.1:8000';
-const TOURNAMENT_ID = 0;
+const TOURNAMENT_ID = 1;
 
 addPredicates({
     fullName           : /^\p{Letter}{2,}( \p{Letter}{2,})+$/u,
@@ -47,7 +47,7 @@ async function validateAndSubmitForm() {
         showStatusFn(responseData);
     } 
     catch (error) {
-        console.error(`ERROR: An error has ocurred when connecting to server at ${URL}`)
+        showSubmissionInfo(`ERROR: An error has ocurred when connecting to server at ${URL}`, false);
         console.error(error);
     }
 }
