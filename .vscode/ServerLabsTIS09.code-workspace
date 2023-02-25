@@ -6,6 +6,10 @@
     ],
     "settings": {
         "terminal.integrated.fontSize": 16,
-        "liveServer.settings.port": 5501
+        "liveServer.settings.port": 5501,
+        "liveServer.settings.ignoreFiles": [
+            ".vscode/**",
+            "**/*.db"
+        ]
     }
 }
