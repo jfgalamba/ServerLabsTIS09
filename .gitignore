@@ -153,3 +153,6 @@ dmypy.json
 .pyre/
 
 .DS_Store
+
+# SQLite
+web/**/*.db
