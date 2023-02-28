@@ -1,0 +1,15 @@
+https://fastapi.tiangolo.com/tutorial/sql-databases/
+https://fastapi.tiangolo.com/tutorial/sql-databases/#orms
+
+https://docs.sqlalchemy.org/en/14/
+https://docs.sqlalchemy.org/en/14/intro.html
+https://docs.sqlalchemy.org/en/14/orm/
+https://docs.sqlalchemy.org/en/14/orm/quickstart.html
+
+https://docs.pydantic.dev/usage/models/
+https://docs.pydantic.dev/usage/schema/
+https://docs.pydantic.dev/usage/model_config/
+https://docs.pydantic.dev/usage/schema/#field-customization
+
+
+http://docopt.org
