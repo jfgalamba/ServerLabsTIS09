@@ -2,8 +2,10 @@
 
 2 - Implementar modelo de dados que suporte múltiplas inscrições em torneios
    (ou seja, relacionamento de muitos-para-muitos entre Player e Tournament)
- 
-3 - Queremos que o nosso formulário aceite pelo menos duas línguas (pt e en). 
+
+3 - Adicionar selecção do torneio a partir de uma dropdown
+
+4 - Queremos que o nosso formulário aceite pelo menos duas línguas (pt e en). 
     Ver ficheiro locale.js. Neste ficheiro está um esboço para um suporte 
     de várias linguas client-side. Acabar este suporte e acrescentar 
     dois botões para alternar entre as duas linguas.
