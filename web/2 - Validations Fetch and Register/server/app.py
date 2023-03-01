@@ -14,8 +14,8 @@ and Flask apps:
 
     - schemas.py: Pydantic models/schemas
     - models.py: SQLAlchemy models (the data model)
-    - database.py: SQLAlchemy connection and session definitions
     - database_crud.py: SQLAlchemy database access operations
+    - database.py: SQLAlchemy connection and session definitions
 
 Links:
     https://fastapi.tiangolo.com/tutorial/sql-databases/
@@ -26,7 +26,12 @@ Links:
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
+from sqlalchemy.orm import Session
+
+import database as db
+import database_crud as crud
 import schemas as sch
+import models
 from schemas import ErrorCode
 
 
@@ -47,22 +52,39 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post('/register')
-async def register(player: sch.PlayerRegister) -> sch.PlayerRegisterResult:
+def get_db_session():
+    db_session = db.SessionLocal()
+    try:
+        yield db_session
+    finally:
+        db_session.close()
+#:
+
+@app.post('/register', response_model = sch.PlayerRegisterResult)
+async def register(
+        player: sch.PlayerRegister,
+        db_session: Session = Depends(get_db_session),
+):
     tourn_id = player.tournament_id
     if tourn_id is None:
         error = ErrorCode.ERR_UNSPECIFIED_TOURNAMENT
         raise HTTPException(status_code = 400, detail=error.details())
 
-    if tourn_id not in (1, 2, 3):
+    db_player = crud.get_player_by_email(db_session, player.email)
+    if not db_player:
+        db_player = crud.create_player(db_session, player)
+
+    if db_player.tournament_id == tourn_id:
+        error = ErrorCode.ERR_PLAYER_ALREADY_ENROLLED
+        raise HTTPException(status_code=400, detail=error.details(tourn_id = tourn_id))
+
+    if crud.get_tournament_by_id(db_session, tourn_id) is None:
         error = ErrorCode.ERR_UNKNOWN_TOURNAMENT_ID
         raise HTTPException(status_code = 404, detail=error.details(tourn_id = tourn_id))
 
-    return sch.PlayerRegisterResult(
-        id = 1105,
-        full_name = player.full_name,
-        email = player.email,
-    )
+    crud.update_player_tournament(db_session, db_player, tourn_id)
+
+    return db_player
 #:
 
 ################################################################################
@@ -87,9 +109,9 @@ Options:
     create_ddl = args['--create-ddl']
     populate_db = args['--populate-db']
     if create_ddl:
-        print("Will create ddl")
+        db.create_metadata()
         if populate_db:
-            print("Will also populate the DB")
+            models.populate_db()
         #:
     #:
 

@@ -10,4 +10,4 @@
     de várias linguas client-side. Acabar este suporte e acrescentar 
     dois botões para alternar entre as duas linguas.
 
-(Opcional: 4 - Implementar formulário para criar torneio.)
+(Opcional: 5 - Implementar formulário para criar torneio.)
