@@ -26,7 +26,7 @@ async def sum(x: int, y: int):
 # Protocolo HTTP possui um conjunto de métodos (isto é, de mensagens):
 #   - GET: obter um recurso (ler)
 #   - POST: enviar dados para o servidor / criar um registo no servidor
-#   - PUT: semelhante a POST mas dados são enviados como um upload
+#   - PUT: actualizar dados, semelhante a POST mas dados são enviados como um upload
 #   - DELETE: apagar recursos no lado do servidor
 #   - HEAD
 #   - etc.
